@@ -1,227 +1,286 @@
 <!DOCTYPE html>
-<html lang="en-us">
-
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <!-- Start loading assets right away, to have them (partly) loaded already when they are requested -->
-  <link rel="preload" href="Build//06960d7a8cdc0668eae6012683cb0225.data.unityweb" as="fetch" type="application/octet-stream" crossorigin>
-  <link rel="preload" href="Build/2993716f8ea281b85c2bdb303bede799.framework.js.unityweb" as="script">
-  <link rel="preload" href="Build/b408a71854b802c51633e4e4113e95ef.wasm.unityweb" as="fetch" type="application/wasm" crossorigin>
-  <title>Words</title>
-    <link rel="shortcut icon" href="favicon.ico">
-    <!-- <link rel="manifest" href="manifest.webmanifest"> -->
-  <style>
-    * {
-      padding: 0;
-      margin: 0;
-    }
-
-    html {
-      /* fix mobile viewport menu bar on iOS */
-      height: -webkit-fill-available;
-    }
-
-    body {
-      height: 100%;
-      /* fix mobile viewport menu bar on iOS */
-      height: -webkit-fill-available;
-      width: 100%;
-      text-align: center;
-    }
-
-    #unity-container {
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #000;
-    }
-
-    /* Default values, might be overwritten by aspect ratio media queries */
-    #unity-canvas {
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-    }
-
-    @media (min-aspect-ratio: 3/1) {
-      #unity-canvas {
-        width: auto;
-        height: 100%;
-        aspect-ratio: 3/1;
-      }
-    }
-
-    @media (max-aspect-ratio: 2/1) {
-      #unity-canvas {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 2/1;
-      }
-    }
-
-    #unity-loading-container {
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 40px;
-
-      opacity: 1;
-      visibility: visible;
-      transition: 800ms linear;
-    }
-
-    #unity-loading-container.finished {
-      opacity: 0;
-      visibility: collapse;
-    }
-
-    #unity-loading-container .logo {
-      width: 15%;
-      height: 15%;
-    }
-
-    #unity-loading-bar {
-      position: relative;
-      width: 40%;
-      height: 10px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
-
-    #unity-loading-bar-inner {
-      position: absolute;
-      left: 0%;
-      top: 0%;
-      width: 1%;
-      height: 100%;
-      background-color: #ccc;
-      border-radius: 10px;
-      transition: 400ms linear;
-    }
-  </style>
-  <script src="kidopia-game-bridge.js"></script>
-  <script>
-    // Audio unlock for iOS/Android WebView
-    (function() {
-        var unlocked = false;
-        function unlock() {
-            if (unlocked) return;
-            var audioCtx = window.AudioContext || window.webkitAudioContext;
-            if (audioCtx) {
-                var ctx = new audioCtx();
-                var buffer = ctx.createBuffer(1, 1, 22050);
-                var source = ctx.createBufferSource();
-                source.buffer = buffer;
-                source.connect(ctx.destination);
-                source.start(0);
-                if (ctx.state === 'suspended') ctx.resume();
-            }
-            unlocked = true;
-            document.removeEventListener('touchstart', unlock, true);
-            document.removeEventListener('touchend', unlock, true);
-            document.removeEventListener('click', unlock, true);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kidopia Games</title>
+    <link rel="shortcut icon" href="kidopia-logo.png">
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --dark: #2C3E50;
+            --light: #F7F9FC;
         }
-        document.addEventListener('touchstart', unlock, true);
-        document.addEventListener('touchend', unlock, true);
-        document.addEventListener('click', unlock, true);
-    })();
-</script>
+
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; /* Kid-friendly font */
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+        }
+
+        /* Game Grid */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .game-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Game Card */
+        .game-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border: 4px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary);
+        }
+
+        .game-thumb {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #ddd;
+        }
+
+        .card-body {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
+
+        .play-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #2A9D8F; /* 3D effect */
+            transition: all 0.1s;
+        }
+
+        .play-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 #2A9D8F;
+        }
+
+        /* --- FULLSCREEN PLAYER OVERLAY --- */
+        #game-player {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: black;
+            z-index: 9999;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Floating Close Button */
+        #close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #FF6B6B;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #close-btn:hover {
+            background-color: #ff4757;
+        }
+
+        /* Orientation Badge */
+        .badge {
+            font-size: 0.8rem;
+            background: #eee;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #666;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+    </style>
 </head>
-
 <body>
-  <div id="unity-container">
-    <canvas id="unity-canvas" width="1920" height="1080" data-pixel-art="true"></canvas>
-  </div>
-  <div id="unity-loading-container">
-    <img src="kidopia-logo.png" class="logo" alt="Logo Y0red Games">
-    <div id="unity-loading-bar">
-      <div id="unity-loading-bar-inner"></div>
+
+    <header>
+        <h1>🎮 Kidopia Games</h1>
+    </header>
+
+    <div class="container">
+        <div id="game-list" class="game-list">
+            </div>
     </div>
-  </div>
 
-  <script>
-      KidopiaBridge.on('pause', function() {
-        // Pause your game, mute audio, etc.
-          SendMessage('GameManager', 'OnPause');
-      });
+    <div id="game-player">
+        <button id="close-btn" onclick="closeGame()">✕</button>
+        <iframe id="game-frame" src="" allowfullscreen></iframe>
+    </div>
 
-      KidopiaBridge.on('resume', function() {
-          // Resume your game
-          SendMessage('GameManager', 'OnResume');
-      });
+    <script>
+        /* --- JAVASCRIPT LOGIC --- */
 
-      KidopiaBridge.on('init', function(data) {
-          // data.profile = { childId, childName, avatarUrl }
-          // data.savedData = previous save data (JSON string) or null
-          console.log('Player:', data.profile.childName);
-          if (data.savedData) {
-              console.log("saved-Data:"+JSON.parse(data.savedData));
-          }
-      });
-      
-          
-  </script>
-  <script src="Build/749b8ddbf5c40d1ae7d7159b1f347b58.loader.js"></script>
-   <script>
-    var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/749b8ddbf5c40d1ae7d7159b1f347b58.loader.js";
-    var config = {
-      dataUrl: buildUrl + "/06960d7a8cdc0668eae6012683cb0225.data.unityweb",
-      frameworkUrl: buildUrl + "/2993716f8ea281b85c2bdb303bede799.framework.js.unityweb",
-      codeUrl: buildUrl + "/b408a71854b802c51633e4e4113e95ef.wasm.unityweb",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "Y0red Games",
-      productName: "Words",
-      productVersion: "1.0.0",
-    };
+        // 1. Mock JSON Data (Replace links with real game URLs)
+        const gamesData = [
+            {
+                "name": "Alphabet Coloring Adventure",
+                "link": "/games/alphabet-coloring/index.html",
+                "image": "/games/alphabet-coloring/icon.png",
+                "orientation": "landscape"
+            },
+            {
+                "name": "Words & Letters Adventure",
+                "link": "/games/alphabet-words/index.html",
+                "image": "/games/alphabet-words/icon.png",
+                "orientation": "landscape"
+            },
+            {
+                "name": "Geez Bubble Pop",
+                "link": "/games/geez-bubble/index.html", 
+                "image": "/games/geez-bubble/icon.png",
+                "orientation": "portrait"
+            },
+            {
+                "name": "Guzo Geez",
+                "link": "/games/go-geez/index.html",
+                "image": "/games/go-geez/icon.png",
+                "orientation": "portrait"
+            }
+        ];
 
-    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if(isMobile) {
-      // Define a maximum pixel ratio for mobile to avoid rendering at too high resolutions
-      const maxPixelRatioMobile = 2.0;
-      config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
+        // 2. Render Games List
+        const listContainer = document.getElementById('game-list');
 
-	var canvas = document.querySelector("#unity-canvas");
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-        canvas.style.position = "fixed";
-    }
+        function renderGames() {
+            listContainer.innerHTML = '';
+            gamesData.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                
+                card.innerHTML = `
+                    <img src="${game.image}" alt="${game.name}" class="game-thumb">
+                    <div class="card-body">
+                        <span class="badge">${game.orientation}</span>
+                        <h3 class="game-title">${game.name}</h3>
+                        <button class="play-btn" onclick="playGame('${game.link}', '${game.orientation}')">▶ PLAY</button>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
 
-    var canvas = document.querySelector("#unity-canvas");
-    var loadingContainer = document.querySelector("#unity-loading-container");
-    var loadingBar = document.querySelector("#unity-loading-bar-inner");
+        // 3. Play Game Logic (Fullscreen + Orientation Lock)
+        const player = document.getElementById('game-player');
+        const iframe = document.getElementById('game-frame');
 
-    var unityGame;
-    var script = document.createElement("script");
-    script.src = loaderUrl;
-    script.onload = function() {
-      createUnityInstance(canvas, config, function(progress) {
-        loadingBar.style.width = 100 * progress + "%";
-      }).then(function(unityInstance) {
-        unityGame = unityInstance;
-        loadingContainer.classList.add("finished");
-      }).catch(function(message) {
-        alert(message);
-      });
-    };
-    document.body.appendChild(script);
-  </script>
+        async function playGame(url, orientation) {
+            // Set source
+            iframe.src = url;
+            
+            // Show player
+            player.style.display = 'block';
+
+            // Request Fullscreen first (Required before locking orientation)
+            try {
+                if (player.requestFullscreen) {
+                    await player.requestFullscreen();
+                } else if (player.webkitRequestFullscreen) { /* Safari */
+                    await player.webkitRequestFullscreen();
+                } else if (player.msRequestFullscreen) { /* IE11 */
+                    await player.msRequestFullscreen();
+                }
+                
+                // Attempt to lock orientation
+                // Note: This mainly works on Mobile (Android) within an installed PWA or Fullscreen mode.
+                // It is often blocked on Desktop browsers.
+                if (screen.orientation && screen.orientation.lock) {
+                    const lockType = orientation === 'portrait' ? 'portrait-primary' : 'landscape-primary';
+                    await screen.orientation.lock(lockType);
+                    console.log(`Locked to ${lockType}`);
+                }
+            } catch (err) {
+                console.warn("Orientation lock or Fullscreen failed:", err);
+                // We don't stop the game if locking fails; we just log the error.
+            }
+        }
+
+        // 4. Close Game Logic
+        function closeGame() {
+            // Unlock orientation
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
+
+            // Exit fullscreen
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(err => console.log(err));
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+
+            // Hide player and stop game (by clearing src)
+            player.style.display = 'none';
+            iframe.src = "";
+        }
+
+        // Initialize
+        renderGames();
+
+    </script>
 </body>
 </html>

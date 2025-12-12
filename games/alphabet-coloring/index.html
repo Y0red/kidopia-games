@@ -8,10 +8,10 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <!-- Start loading assets right away, to have them (partly) loaded already when they are requested -->
-  <link rel="preload" href="Build//132ad57680edfb4fc9dda92b14e514e0.data.unityweb" as="fetch" type="application/octet-stream" crossorigin>
-  <link rel="preload" href="Build/4342d0e27d56fabe6c419c48e50d7c25.framework.js.unityweb" as="script">
-  <link rel="preload" href="Build/2c698a627687cb5b81db59f74936cb91.wasm.unityweb" as="fetch" type="application/wasm" crossorigin>
-  <title>Words</title>
+  <link rel="preload" href="Build//296a09729d190e85362929d8ca3a8535.data.unityweb" as="fetch" type="application/octet-stream" crossorigin>
+  <link rel="preload" href="Build/4836f905fc0d99e618ee3ca1556b22d6.framework.js.unityweb" as="script">
+  <link rel="preload" href="Build/38594d9f93cd6ebe12654196d5bb9e78.wasm.unityweb" as="fetch" type="application/wasm" crossorigin>
+  <title>Coloring</title>
     <link rel="shortcut icon" href="favicon.ico">
     <!-- <link rel="manifest" href="manifest.webmanifest"> -->
   <style>
@@ -42,7 +42,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #000;
+      background-color: #0000;
     }
 
     /* Default values, might be overwritten by aspect ratio media queries */
@@ -52,19 +52,19 @@
       background-color: #fff;
     }
 
-    @media (min-aspect-ratio: 3/1) {
+    @media (min-aspect-ratio: 2/1) {
       #unity-canvas {
         width: auto;
         height: 100%;
-        aspect-ratio: 3/1;
+        aspect-ratio: 2/1;
       }
     }
 
-    @media (max-aspect-ratio: 2/1) {
+    @media (max-aspect-ratio: 3/1) {
       #unity-canvas {
         width: 100%;
         height: auto;
-        aspect-ratio: 2/1;
+        aspect-ratio: 3/1;
       }
     }
 
@@ -150,7 +150,7 @@
     <canvas id="unity-canvas" width="1920" height="1080" data-pixel-art="true"></canvas>
   </div>
   <div id="unity-loading-container">
-    <img src="kidopia-logo.png" class="logo" alt="Logo DefaultCompany">
+    <img src="kidopia-logo.png" class="logo" alt="Logo Y0red">
     <div id="unity-loading-bar">
       <div id="unity-loading-bar-inner"></div>
     </div>
@@ -178,17 +178,17 @@
       
           
   </script>
-  <script src="Build/92c9c323c6218c24ca6791bf56128af3.loader.js"></script>
+  <script src="Build/47e005fb522d5b94a09af06488de6a47.loader.js"></script>
    <script>
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/92c9c323c6218c24ca6791bf56128af3.loader.js";
+    var loaderUrl = buildUrl + "/47e005fb522d5b94a09af06488de6a47.loader.js";
     var config = {
-      dataUrl: buildUrl + "/132ad57680edfb4fc9dda92b14e514e0.data.unityweb",
-      frameworkUrl: buildUrl + "/4342d0e27d56fabe6c419c48e50d7c25.framework.js.unityweb",
-      codeUrl: buildUrl + "/2c698a627687cb5b81db59f74936cb91.wasm.unityweb",
+      dataUrl: buildUrl + "/296a09729d190e85362929d8ca3a8535.data.unityweb",
+      frameworkUrl: buildUrl + "/4836f905fc0d99e618ee3ca1556b22d6.framework.js.unityweb",
+      codeUrl: buildUrl + "/38594d9f93cd6ebe12654196d5bb9e78.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
-      companyName: "DefaultCompany",
-      productName: "Words",
+      companyName: "Y0red",
+      productName: "Coloring",
       productVersion: "1.0",
     };
 
